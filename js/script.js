@@ -8,12 +8,10 @@ let currentKPIValues = {
 
 let maxChangePerStep = 0.05; // Máxima mudança permitida por atualização
 let gaugeElements = {}; // Para armazenar os elementos de gauges criados
-let isSimulating = false;
+let textElements = {}; // Para armazenar os elementos de texto
 
 // Função para gerar e atualizar os valores dos KPIs
 function updateKPIValues() {
-    if (!isSimulating) return;
-
     for (let kpiName in currentKPIValues) {
         let currentValue = currentKPIValues[kpiName];
 
@@ -24,10 +22,16 @@ function updateKPIValues() {
         // Atualiza o valor suavemente
         currentKPIValues[kpiName] = lerp(currentValue, targetValue, 0.1);
 
-        // Atualiza o gauge visualmente
+        // Atualiza o gauge visualmente (tamanho do anel)
         if (gaugeElements[kpiName]) {
             let scale = currentKPIValues[kpiName]; 
             gaugeElements[kpiName].setAttribute('scale', `${scale} 1 1`);
+        }
+
+        // Atualiza o texto com a porcentagem
+        if (textElements[kpiName]) {
+            let percentage = (currentKPIValues[kpiName] * 100).toFixed(1) + '%';
+            textElements[kpiName].setAttribute('value', `${kpiName}: ${percentage}`);
         }
     }
 }
@@ -37,45 +41,28 @@ function lerp(a, b, t) {
     return a + (b - a) * t;
 }
 
-// Atualizar a cada 3 segundos
+// Atualiza os valores a cada 3 segundos
 setInterval(updateKPIValues, 3000);
 
 // Relaciona os elementos HTML com os KPIs
-gaugeElements["OEE"] = document.querySelector('#gauge-OEE');
-gaugeElements["Disponibilidade"] = document.querySelector('#gauge-Disponibilidade');
-gaugeElements["Performance"] = document.querySelector('#gauge-Performance');
-gaugeElements["Qualidade"] = document.querySelector('#gauge-Qualidade');
+gaugeElements["OEE"] = document.querySelector('#gauge-OEE a-ring');
+gaugeElements["Disponibilidade"] = document.querySelector('#gauge-Disponibilidade a-ring');
+gaugeElements["Performance"] = document.querySelector('#gauge-Performance a-ring');
+gaugeElements["Qualidade"] = document.querySelector('#gauge-Qualidade a-ring');
 
-// Controle dos botões
-const arButton = document.getElementById("arButton");
-const backButton = document.getElementById("backButton");
+// Relaciona os textos com os KPIs
+textElements["OEE"] = document.querySelector('#text-OEE');
+textElements["Disponibilidade"] = document.querySelector('#text-Disponibilidade');
+textElements["Performance"] = document.querySelector('#text-Performance');
+textElements["Qualidade"] = document.querySelector('#text-Qualidade');
 
-arButton.addEventListener("click", () => {
-    arButton.style.display = "none";
-    backButton.style.display = "block";
-    isSimulating = true;
+// Evento para detectar quando o QR code é lido
+const qrMarker = document.getElementById('qrMarker');
+qrMarker.addEventListener('markerFound', () => {
+    console.log('QR Code detectado! Exibindo gauges...');
+    updateKPIValues(); // Atualiza os KPIs quando o QR code é detectado
 });
 
-backButton.addEventListener("click", () => {
-    arButton.style.display = "block";
-    backButton.style.display = "none";
-    isSimulating = false;
-});
-
-// Ajusta dinamicamente o aspect ratio e tenta reduzir o zoom da câmera
-window.addEventListener('resize', function() {
-    const scene = document.querySelector('a-scene');
-    const camera = scene.querySelector('[camera]');
-    const aspectRatio = window.innerWidth / window.innerHeight;
-    camera.setAttribute('camera', 'aspectRatio', aspectRatio);
-});
-
-window.addEventListener('load', function() {
-    const scene = document.querySelector('a-scene');
-    const camera = scene.querySelector('[camera]');
-    const aspectRatio = window.innerWidth / window.innerHeight;
-    camera.setAttribute('camera', 'aspectRatio', aspectRatio);
-
-    // Definir FOV (Field of View) para ajustar o zoom
-    camera.setAttribute('camera', 'fov', 70); // Ajuste o FOV para um valor apropriado
+qrMarker.addEventListener('markerLost', () => {
+    console.log('QR Code perdido. Pausando exibição dos gauges.');
 });
