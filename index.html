@@ -24,11 +24,37 @@
             <a-box id="gauge-Qualidade" position="2 1 0" material="color: yellow;"></a-box>
         </a-marker>
 
-        <!-- Câmera padrão da A-Frame -->
-        <a-entity camera fov="10"></a-entity>
-
+        <!-- Câmera padrão da A-Frame com ajuste de FOV -->
+        <a-entity camera fov="80"></a-entity>
     </a-scene>
 
     <script src="js/script.js"></script>
+
+    <script>
+        // Função para configurar a resolução da câmera
+        function setCameraConstraints() {
+            const constraints = {
+                video: {
+                    width: { ideal: 1280 },  // Largura desejada
+                    height: { ideal: 720 },  // Altura desejada
+                    facingMode: 'environment',  // Usa a câmera traseira
+                    aspectRatio: 16/9           // Aspecto desejado
+                }
+            };
+
+            // Obtém a stream de vídeo
+            navigator.mediaDevices.getUserMedia(constraints)
+                .then(function(stream) {
+                    const video = document.querySelector('video');
+                    video.srcObject = stream;
+                })
+                .catch(function(err) {
+                    console.error("Erro ao acessar a câmera: ", err);
+                });
+        }
+
+        // Chama a função ao carregar a página
+        window.onload = setCameraConstraints;
+    </script>
 </body>
 </html>
