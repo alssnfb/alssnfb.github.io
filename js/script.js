@@ -61,3 +61,21 @@ backButton.addEventListener("click", () => {
     backButton.style.display = "none";
     isSimulating = false;
 });
+
+// Ajusta dinamicamente o aspect ratio e tenta reduzir o zoom da câmera
+window.addEventListener('resize', function() {
+    const scene = document.querySelector('a-scene');
+    const camera = scene.querySelector('[camera]');
+    const aspectRatio = window.innerWidth / window.innerHeight;
+    camera.setAttribute('camera', 'aspectRatio', aspectRatio);
+});
+
+window.addEventListener('load', function() {
+    const scene = document.querySelector('a-scene');
+    const camera = scene.querySelector('[camera]');
+    const aspectRatio = window.innerWidth / window.innerHeight;
+    camera.setAttribute('camera', 'aspectRatio', aspectRatio);
+
+    // Definir FOV (Field of View) para ajustar o zoom
+    camera.setAttribute('camera', 'fov', 70); // Ajuste o FOV para um valor apropriado
+});
