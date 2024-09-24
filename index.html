@@ -25,22 +25,22 @@
 <body>
     <a-scene vr-mode-ui="enabled: false" embedded arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false">
         <a-marker preset="custom" type="pattern" url="markers/QrCode.patt" id="qrMarker">
-            <a-entity id="gauge-OEE" position="-1.5 1 0" rotation="0 0 0" scale="1.5 1.5 1.5" material="color: blue;">                
+            <a-entity id="gauge-OEE" position="-1.5 1 0" rotation="2 0 0" scale="1.5 1.5 1.5" material="color: blue;">                
                 <a-ring color="blue" radius-inner="0.5" radius-outer="0.6"></a-ring>
                 <a-text id="text-OEE" value="OEE: 0%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
 
-            <a-entity id="gauge-Disponibilidade" position="-0.5 1 0" rotation="0 0 0" scale="1.5 1.5 1.5" material="color: orange;">                
+            <a-entity id="gauge-Disponibilidade" position="-0.5 1 0" rotation="2 0 0" scale="1.5 1.5 1.5" material="color: orange;">                
                 <a-ring color="green" radius-inner="0.5" radius-outer="0.6"></a-ring>
                 <a-text id="text-Disponibilidade" value="Disp: 0%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
 
-            <a-entity id="gauge-Performance" position="0.5 1 0" rotation="0 0 0" scale="1.5 1.5 1.5" material="color: green;">                
+            <a-entity id="gauge-Performance" position="0.5 1 0" rotation="2 0 0" scale="1.5 1.5 1.5" material="color: green;">                
                 <a-ring color="red" radius-inner="0.5" radius-outer="0.6"></a-ring>
                 <a-text id="text-Performance" value="Perf: 0%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
 
-            <a-entity id="gauge-Qualidade" position="1.5 1 0" rotation="0 0 0" scale="1.5 1.5 1.5" material="color: yellow;">                
+            <a-entity id="gauge-Qualidade" position="1.5 1 0" rotation="2 0 0" scale="1.5 1.5 1.5" material="color: yellow;">                
                 <a-ring color="yellow" radius-inner="0.5" radius-outer="0.6"></a-ring>
                 <a-text id="text-Qualidade" value="Qual: 0%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
