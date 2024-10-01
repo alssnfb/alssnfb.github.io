@@ -24,16 +24,15 @@
 </head>
 <body>
     <a-scene vr-mode-ui="enabled: false" embedded arjs="sourceType: webcam; sourceWidth:1280; sourceHeight:960; displayWidth: 1280; displayHeight: 960; videoTexture: true; debugUIEnabled: false">
-        <a-marker-camera preset="custom" type="pattern" url="markers/QrCode.patt" id="qrMarker">
+        <a-marker preset="custom" type="pattern" url="markers/QrCode.patt" id="qrMarker">
             <!-- Gauge OEE -->
-            <a-entity id="gauge-OEE">
-                <a-plane position="0 0 0" rotation="-90 0 0" width="1" height="1" color="blue"></a-plane>
+            <a-entity id="gauge-OEE" position="-1.5 0.5 0" scale="1.2 1.2 1.2" material="color: blue;">
                 <a-ring color="blue" radius-inner="0.5" radius-outer="0.6"></a-ring>
                 <a-text id="text-OEE" value="OEE: 0%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
 
             <!-- Gauge Disponibilidade -->
-            <a-entity id="gauge-Disponibilidade" position="-0.5 0 0" scale="1.2 1.2 1.2" material="color: orange;">
+            <a-entity id="gauge-Disponibilidade" position="-0.5 0.5 0" scale="1.2 1.2 1.2" material="color: orange;">
                 <a-ring color="orange" radius-inner="0.5" radius-outer="0.6"></a-ring>
                 <a-text id="text-Disponibilidade" value="Disp: 0%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
@@ -49,26 +48,33 @@
                 <a-ring color="yellow" radius-inner="0.5" radius-outer="0.6"></a-ring>
                 <a-text id="text-Qualidade" value="Qual: 0%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
-        </a-marker-camera>
+        </a-marker>
 
-        <!-- Definir a câmera com campo de visão fixo -->
-        <!-- <a-entity camera="fov: 80"></a-entity> -->
+        <a-entity camera></a-entity>
     </a-scene>
 
     <script>
-        // Manter a escala e a proporção fixas ao redimensionar a janela
-        window.addEventListener('resize', function() {
-            const scene = document.querySelector('a-scene');
-            const camera = scene.querySelector('[camera]');
-            const aspectRatio = window.innerWidth / window.innerHeight;
-            camera.setAttribute('camera', 'aspectRatio', aspectRatio);
-        });
+        const marker = document.querySelector("#qrMarker");
 
-        window.addEventListener('load', function() {
-            const scene = document.querySelector('a-scene');
-            const camera = scene.querySelector('[camera]');
-            const aspectRatio = window.innerWidth / window.innerHeight;
-            camera.setAttribute('camera', 'aspectRatio', aspectRatio);
+        marker.addEventListener("markerFound", () => {
+            console.log("Marker found!");
+            const gaugeOEE = document.querySelector("#gauge-OEE");
+            const gaugeDisponibilidade = document.querySelector("#gauge-Disponibilidade");
+            const gaugePerformance = document.querySelector("#gauge-Performance");
+            const gaugeQualidade = document.querySelector("#gauge-Qualidade");
+
+            // Clona as entidades dos gauges para manter a posição onde foram detectadas
+            const scene = document.querySelector("a-scene");
+            const gauges = [gaugeOEE, gaugeDisponibilidade, gaugePerformance, gaugeQualidade];
+            
+            gauges.forEach(gauge => {
+                const clone = gauge.cloneNode(true); // Cria uma cópia do gauge
+                clone.setAttribute("position", gauge.getAttribute("position")); // Mantém a posição original
+                scene.appendChild(clone); // Adiciona o clone diretamente na cena
+            });
+            
+            // Opcional: Esconde os originais, mas mantém na cena para evitar problemas
+            marker.setAttribute("visible", "false");
         });
     </script>
 </body>

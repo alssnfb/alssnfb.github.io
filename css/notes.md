@@ -34,4 +34,5 @@ a-entity {
 
 **HTML**
 
-            <a-entity id="gauge-OEE" position="-1.5 0 0" scale="1.2 1.2 1.2" material="color: blue;">
+<a-entity id="gauge-OEE" position="-1.5 0 0" scale="1.2 1.2 1.2" material="color: blue;">
+<a-plane position="0 0 0" rotation="-90 0 0" width="1" height="1" color="blue"></a-plane>
