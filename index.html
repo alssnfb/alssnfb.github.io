@@ -69,9 +69,9 @@
 
             // Definir posição, rotação e escala fixas para os gauges
             gauges.forEach((gauge, index) => {
-                gauge.setAttribute("position", `${index * 2.0 - 3.0} 0.5 0`);  // Ajusta o espaçamento entre os gauges
+                gauge.setAttribute("position", `${index * 4.0 - 5.0} 0.5 0`);  // Ajusta o espaçamento entre os gauges
                 gauge.setAttribute("rotation", "-90 0 0");  // Define a rotação padrão
-                gauge.setAttribute("scale", "3.2 3.2 3.2");  // Define a escala fixa
+                gauge.setAttribute("scale", "2.5 2.5 2.5");  // Define a escala fixa
             });
 
             // Clonar os gauges para a cena diretamente
