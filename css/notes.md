@@ -30,3 +30,8 @@ a-entity[camera] {
 a-entity {
     transition: transform 0.3s ease-in-out; /* Suaviza a movimentação dos elementos */
 }
+
+
+**HTML**
+
+            <a-entity id="gauge-OEE" position="-1.5 0 0" scale="1.2 1.2 1.2" material="color: blue;">

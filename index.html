@@ -26,13 +26,14 @@
     <a-scene vr-mode-ui="enabled: false" embedded arjs="sourceType: webcam; sourceWidth:1280; sourceHeight:960; displayWidth: 1280; displayHeight: 960; videoTexture: true; debugUIEnabled: false">
         <a-marker-camera preset="custom" type="pattern" url="markers/QrCode.patt" id="qrMarker">
             <!-- Gauge OEE -->
-            <a-entity id="gauge-OEE" position="-1.5 0.5 0" scale="1.2 1.2 1.2" material="color: blue;">
+            <a-entity id="gauge-OEE">
+                <a-plane position="0 0 0" rotation="-90 0 0" width="1" height="1" color="blue"></a-plane>
                 <a-ring color="blue" radius-inner="0.5" radius-outer="0.6"></a-ring>
                 <a-text id="text-OEE" value="OEE: 0%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
 
             <!-- Gauge Disponibilidade -->
-            <a-entity id="gauge-Disponibilidade" position="-0.5 0.5 0" scale="1.2 1.2 1.2" material="color: orange;">
+            <a-entity id="gauge-Disponibilidade" position="-0.5 0 0" scale="1.2 1.2 1.2" material="color: orange;">
                 <a-ring color="orange" radius-inner="0.5" radius-outer="0.6"></a-ring>
                 <a-text id="text-Disponibilidade" value="Disp: 0%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
