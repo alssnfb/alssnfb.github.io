@@ -13,6 +13,3 @@ a-scene {
     left: 0;
 }
 
-a-entity[camera] {
-    position: 0 0 -3; /* Afastar a câmera do marcador */
-}
