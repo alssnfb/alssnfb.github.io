@@ -56,13 +56,13 @@ textElements["Disponibilidade"] = document.querySelector('#text-Disponibilidade'
 textElements["Performance"] = document.querySelector('#text-Performance');
 textElements["Qualidade"] = document.querySelector('#text-Qualidade');
 
-// Evento para detectar quando o QR code é lido
-const qrMarker = document.getElementById('qrMarker');
-qrMarker.addEventListener('markerFound', () => {
-    console.log('QR Code detectado! Exibindo gauges...');
-    updateKPIValues(); // Atualiza os KPIs quando o QR code é detectado
-});
+// // Evento para detectar quando o QR code é lido
+// const qrMarker = document.getElementById('qrMarker');
+// qrMarker.addEventListener('markerFound', () => {
+//     console.log('QR Code detectado! Exibindo gauges...');
+//     updateKPIValues(); // Atualiza os KPIs quando o QR code é detectado
+// });
 
-qrMarker.addEventListener('markerLost', () => {
-    console.log('QR Code perdido. Pausando exibição dos gauges.');
-});
+// qrMarker.addEventListener('markerLost', () => {
+//     console.log('QR Code perdido. Pausando exibição dos gauges.');
+// });
