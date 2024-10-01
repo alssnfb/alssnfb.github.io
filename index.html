@@ -58,22 +58,31 @@
 
         marker.addEventListener("markerFound", () => {
             console.log("Marker found!");
+
             const gaugeOEE = document.querySelector("#gauge-OEE");
             const gaugeDisponibilidade = document.querySelector("#gauge-Disponibilidade");
             const gaugePerformance = document.querySelector("#gauge-Performance");
             const gaugeQualidade = document.querySelector("#gauge-Qualidade");
 
-            // Clona as entidades dos gauges para manter a posição onde foram detectadas
             const scene = document.querySelector("a-scene");
             const gauges = [gaugeOEE, gaugeDisponibilidade, gaugePerformance, gaugeQualidade];
-            
-            gauges.forEach(gauge => {
-                const clone = gauge.cloneNode(true); // Cria uma cópia do gauge
-                clone.setAttribute("position", gauge.getAttribute("position")); // Mantém a posição original
-                scene.appendChild(clone); // Adiciona o clone diretamente na cena
+
+            // Definir posição, rotação e escala fixas para os gauges
+            gauges.forEach((gauge, index) => {
+                gauge.setAttribute("position", `${index * 1.0 - 1.5} 0.5 0`);  // Ajusta o espaçamento entre os gauges
+                gauge.setAttribute("rotation", "0 0 0");  // Define a rotação padrão
+                gauge.setAttribute("scale", "1.2 1.2 1.2");  // Define a escala fixa
             });
-            
-            // Opcional: Esconde os originais, mas mantém na cena para evitar problemas
+
+            // Clonar os gauges para a cena diretamente
+            gauges.forEach(gauge => {
+                const clone = gauge.cloneNode(true);
+                clone.setAttribute("position", gauge.getAttribute("position"));  // Mantém a posição original
+                clone.setAttribute("rotation", gauge.getAttribute("rotation"));  // Mantém a rotação
+                scene.appendChild(clone);
+            });
+
+            // Esconder o marcador original após a clonagem
             marker.setAttribute("visible", "false");
         });
     </script>
