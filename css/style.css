@@ -1,8 +1,8 @@
 body, html {
     margin: 0;
     padding: 0;
-    overflow: hidden; /* Evita rolagem */
-    height: 100%; /* Garante que o body ocupe 100% da altura */
+    overflow: hidden; 
+    height: 100%; 
 }
 
 a-scene {
