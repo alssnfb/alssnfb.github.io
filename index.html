@@ -26,26 +26,26 @@
     <a-scene vr-mode-ui="enabled: false" embedded arjs="sourceType: webcam; sourceWidth:1280; sourceHeight:960; displayWidth: 1280; displayHeight: 960; videoTexture: true; debugUIEnabled: false">
         <a-marker preset="custom" type="pattern" url="markers/QrCode.patt" id="qrMarker">
             <!-- Gauge OEE -->
-            <a-entity id="gauge-OEE" position="-1.5 0.5 0" scale="1.2 1.2 1.2" material="color: blue;">
-                <a-ring color="blue" radius-inner="0.5" radius-outer="0.6"></a-ring>
+            <a-entity id="gauge-OEE" position="-1.5 0.5 0" scale="1.2 1.2 1.2">
+                <a-ring id="ring-OEE" color="blue" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
                 <a-text id="text-OEE" value="OEE: 0%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
 
             <!-- Gauge Disponibilidade -->
-            <a-entity id="gauge-Disponibilidade" position="-0.5 0.5 0" scale="1.2 1.2 1.2" material="color: orange;">
-                <a-ring color="orange" radius-inner="0.5" radius-outer="0.6"></a-ring>
+            <a-entity id="gauge-Disponibilidade" position="-0.5 0.5 0" scale="1.2 1.2 1.2">
+                <a-ring id="ring-Disponibilidade" color="orange" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
                 <a-text id="text-Disponibilidade" value="Disp: 0%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
 
             <!-- Gauge Performance -->
-            <a-entity id="gauge-Performance" position="0.5 0.5 0" scale="1.2 1.2 1.2" material="color: green;">
-                <a-ring color="green" radius-inner="0.5" radius-outer="0.6"></a-ring>
+            <a-entity id="gauge-Performance" position="0.5 0.5 0" scale="1.2 1.2 1.2">
+                <a-ring id="ring-Performance" color="green" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
                 <a-text id="text-Performance" value="Perf: 0%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
 
             <!-- Gauge Qualidade -->
-            <a-entity id="gauge-Qualidade" position="1.5 0.5 0" scale="1.2 1.2 1.2" material="color: yellow;">
-                <a-ring color="yellow" radius-inner="0.5" radius-outer="0.6"></a-ring>
+            <a-entity id="gauge-Qualidade" position="1.5 0.5 0" scale="1.2 1.2 1.2">
+                <a-ring id="ring-Qualidade" color="yellow" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
                 <a-text id="text-Qualidade" value="Qual: 0%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
         </a-marker>
@@ -54,6 +54,56 @@
     </a-scene>
 
     <script>
+        // Função para obter valores aleatórios que mudam gradualmente
+        function getRandomValue(currentValue) {
+            const randomChange = Math.floor(Math.random() * 11) - 5;  // Valor aleatório entre -5 e 5
+            let newValue = currentValue + randomChange;
+            newValue = Math.max(0, Math.min(newValue, 100));  // Limita entre 0 e 100
+            return newValue;
+        }
+
+        // Função para atualizar o valor, a cor e o preenchimento do gauge
+        function updateGauge(value, textId, ringId) {
+            // Atualiza o texto
+            const textEntity = document.getElementById(textId);
+            textEntity.setAttribute('value', textId.split('-')[1] + ': ' + value + '%');
+            
+            // Atualiza a cor com base no valor (0% = vermelho, 100% = verde)
+            const ringEntity = document.getElementById(ringId);
+            const greenValue = Math.floor((value / 100) * 255);
+            const redValue = 255 - greenValue;
+            const color = `rgb(${redValue}, ${greenValue}, 0)`;
+            ringEntity.setAttribute('color', color);
+
+            // Atualiza o preenchimento do gauge (theta-length)
+            const thetaLength = (value / 100) * 360;  // Converte a porcentagem em graus
+            ringEntity.setAttribute('theta-length', thetaLength);
+        }
+
+        // Função para atualizar os valores de todos os gauges
+        function randomUpdate() {
+            let oeeValue = parseInt(document.getElementById('text-OEE').getAttribute('value').split(': ')[1].replace('%', ''));
+            let dispValue = parseInt(document.getElementById('text-Disponibilidade').getAttribute('value').split(': ')[1].replace('%', ''));
+            let perfValue = parseInt(document.getElementById('text-Performance').getAttribute('value').split(': ')[1].replace('%', ''));
+            let qualValue = parseInt(document.getElementById('text-Qualidade').getAttribute('value').split(': ')[1].replace('%', ''));
+
+            // Gera novos valores aleatórios gradualmente
+            oeeValue = getRandomValue(oeeValue);
+            dispValue = getRandomValue(dispValue);
+            perfValue = getRandomValue(perfValue);
+            qualValue = getRandomValue(qualValue);
+
+            // Atualiza os gauges
+            updateGauge(oeeValue, 'text-OEE', 'ring-OEE');
+            updateGauge(dispValue, 'text-Disponibilidade', 'ring-Disponibilidade');
+            updateGauge(perfValue, 'text-Performance', 'ring-Performance');
+            updateGauge(qualValue, 'text-Qualidade', 'ring-Qualidade');
+        }
+
+        // Configura a atualização dos valores a cada 2 segundos
+        setInterval(randomUpdate, 2000);
+
+        // Evento para quando o marcador é detectado
         const marker = document.querySelector("#qrMarker");
 
         marker.addEventListener("markerFound", () => {
