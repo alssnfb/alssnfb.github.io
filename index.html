@@ -6,6 +6,8 @@
     <title>AR KPI Dashboard</title>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.rawgit.com/jeromeetienne/ar.js/1.7.2/aframe/build/aframe-ar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
     <link rel="stylesheet" href="style.css">
     <style>
         a-scene {
@@ -20,7 +22,7 @@
             padding: 0;
             overflow: hidden; 
         }
-        #statusButton {
+        #showGaugesButton {
             position: absolute;
             top: 20px;
             left: 20px;
@@ -31,43 +33,45 @@
             border-radius: 5px;
             font-size: 16px;
             cursor: pointer;
-            z-index: 10; /* Isso garante que o botão esteja no topo */
+            z-index: 10;
         }
     </style>
 </head>
 <body>
     <!-- Botão para exibir os gauges -->
-    <button id="statusButton">STATUS</button>
+    <button id="showGaugesButton">Mostrar Gauges</button>
 
     <a-scene vr-mode-ui="enabled: false" embedded arjs="sourceType: webcam; sourceWidth:1280; sourceHeight:960; displayWidth: 1280; displayHeight: 960; videoTexture: true; debugUIEnabled: false">
-        <!-- Gauge OEE -->
-        <a-entity id="gauge-OEE" position="-1.5 0.5 0" scale="1.2 1.2 1.2" visible="false">
-            <a-ring id="ring-OEE" color="blue" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
-            <a-text id="text-OEE" value="OEE: 0%" position="0 0.8 0" align="center" color="white"></a-text>
-        </a-entity>
+        <!-- Grupo de gauges manipuláveis -->
+        <a-entity id="gauge-group" scale="1 1 1" position="0 1 -2" visible="false" gesture-handler>
+            <!-- Gauge OEE -->
+            <a-entity id="gauge-OEE" position="-1.5 0.5 0" scale="1.2 1.2 1.2">
+                <a-ring id="ring-OEE" color="blue" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
+                <a-text id="text-OEE" value="OEE: 0%" position="0 0.8 0" align="center" color="white"></a-text>
+            </a-entity>
 
-        <!-- Gauge Disponibilidade -->
-        <a-entity id="gauge-Disponibilidade" position="-0.5 0.5 0" scale="1.2 1.2 1.2" visible="false">
-            <a-ring id="ring-Disponibilidade" color="orange" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
-            <a-text id="text-Disponibilidade" value="Disp: 0%" position="0 0.8 0" align="center" color="white"></a-text>
-        </a-entity>
+            <!-- Gauge Disponibilidade -->
+            <a-entity id="gauge-Disponibilidade" position="-0.5 0.5 0" scale="1.2 1.2 1.2">
+                <a-ring id="ring-Disponibilidade" color="orange" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
+                <a-text id="text-Disponibilidade" value="Disp: 0%" position="0 0.8 0" align="center" color="white"></a-text>
+            </a-entity>
 
-        <!-- Gauge Performance -->
-        <a-entity id="gauge-Performance" position="0.5 0.5 0" scale="1.2 1.2 1.2" visible="false">
-            <a-ring id="ring-Performance" color="green" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
-            <a-text id="text-Performance" value="Perf: 0%" position="0 0.8 0" align="center" color="white"></a-text>
-        </a-entity>
+            <!-- Gauge Performance -->
+            <a-entity id="gauge-Performance" position="0.5 0.5 0" scale="1.2 1.2 1.2">
+                <a-ring id="ring-Performance" color="green" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
+                <a-text id="text-Performance" value="Perf: 0%" position="0 0.8 0" align="center" color="white"></a-text>
+            </a-entity>
 
-        <!-- Gauge Qualidade -->
-        <a-entity id="gauge-Qualidade" position="1.5 0.5 0" scale="1.2 1.2 1.2" visible="false">
-            <a-ring id="ring-Qualidade" color="yellow" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
-            <a-text id="text-Qualidade" value="Qual: 0%" position="0 0.8 0" align="center" color="white"></a-text>
+            <!-- Gauge Qualidade -->
+            <a-entity id="gauge-Qualidade" position="1.5 0.5 0" scale="1.2 1.2 1.2">
+                <a-ring id="ring-Qualidade" color="yellow" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
+                <a-text id="text-Qualidade" value="Qual: 0%" position="0 0.8 0" align="center" color="white"></a-text>
+            </a-entity>
         </a-entity>
 
         <a-entity camera></a-entity>
     </a-scene>
 
-    <!-- Importa o arquivo JavaScript -->
     <script src="script.js"></script>
 </body>
 </html>
