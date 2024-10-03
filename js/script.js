@@ -1,68 +1,82 @@
-// // Variáveis para armazenar os valores atuais dos KPIs
-// let currentKPIValues = {
-//     "OEE": Math.random(),
-//     "Disponibilidade": Math.random(),
-//     "Performance": Math.random(),
-//     "Qualidade": Math.random()
-// };
+// Função para obter valores aleatórios entre 0 e 100
+function getRandomInitialValue() {
+    return Math.floor(Math.random() * 101);  // Valor aleatório entre 0 e 100
+}
 
-// let maxChangePerStep = 0.05; // Máxima mudança permitida por atualização
-// let gaugeElements = {}; // Para armazenar os elementos de gauges criados
-// let textElements = {}; // Para armazenar os elementos de texto
+// Função para obter valores aleatórios que mudam gradualmente
+function getRandomValue(currentValue) {
+    const randomChange = Math.floor(Math.random() * 11) - 5;  // Valor aleatório entre -5 e 5
+    let newValue = currentValue + randomChange;
+    newValue = Math.max(0, Math.min(newValue, 100));  // Limita entre 0 e 100
+    return newValue;
+}
 
-// // Função para gerar e atualizar os valores dos KPIs
-// function updateKPIValues() {
-//     for (let kpiName in currentKPIValues) {
-//         let currentValue = currentKPIValues[kpiName];
+// Função para atualizar o valor, a cor e o preenchimento do gauge
+function updateGauge(value, textId, ringId) {
+    // Atualiza o texto
+    const textEntity = document.getElementById(textId);
+    textEntity.setAttribute('value', textId.split('-')[1] + ': ' + value + '%');
+    
+    // Atualiza a cor com base no valor (0% = vermelho, 100% = verde)
+    const ringEntity = document.getElementById(ringId);
+    const greenValue = Math.floor((value / 100) * 255);
+    const redValue = 255 - greenValue;
+    const color = `rgb(${redValue}, ${greenValue}, 0)`;
+    ringEntity.setAttribute('color', color);
 
-//         // Gera um novo valor alvo com base no valor atual, limitando a mudança
-//         let targetValue = currentValue + (Math.random() * 2 - 1) * maxChangePerStep;
-//         targetValue = Math.max(0, Math.min(1, targetValue)); // Clampa entre 0 e 1
+    // Atualiza o preenchimento do gauge (theta-length)
+    const thetaLength = (value / 100) * 360;  // Converte a porcentagem em graus
+    ringEntity.setAttribute('theta-length', thetaLength);
+}
 
-//         // Atualiza o valor suavemente
-//         currentKPIValues[kpiName] = lerp(currentValue, targetValue, 0.1);
+// Função para inicializar os gauges com valores aleatórios
+function initializeGauges() {
+    let oeeValue = getRandomInitialValue();
+    let dispValue = getRandomInitialValue();
+    let perfValue = getRandomInitialValue();
+    let qualValue = getRandomInitialValue();
 
-//         // Atualiza o gauge visualmente (tamanho do anel)
-//         if (gaugeElements[kpiName]) {
-//             let scale = currentKPIValues[kpiName]; 
-//             gaugeElements[kpiName].setAttribute('scale', `${scale} 1 1`);
-//         }
+    // Atualiza os gauges com os valores iniciais
+    updateGauge(oeeValue, 'text-OEE', 'ring-OEE');
+    updateGauge(dispValue, 'text-Disponibilidade', 'ring-Disponibilidade');
+    updateGauge(perfValue, 'text-Performance', 'ring-Performance');
+    updateGauge(qualValue, 'text-Qualidade', 'ring-Qualidade');
+}
 
-//         // Atualiza o texto com a porcentagem
-//         if (textElements[kpiName]) {
-//             let percentage = (currentKPIValues[kpiName] * 100).toFixed(1) + '%';
-//             textElements[kpiName].setAttribute('value', `${kpiName}: ${percentage}`);
-//         }
-//     }
-// }
+// Função para atualizar os valores de todos os gauges de forma gradual
+function randomUpdate() {
+    let oeeValue = parseInt(document.getElementById('text-OEE').getAttribute('value').split(': ')[1].replace('%', ''));
+    let dispValue = parseInt(document.getElementById('text-Disponibilidade').getAttribute('value').split(': ')[1].replace('%', ''));
+    let perfValue = parseInt(document.getElementById('text-Performance').getAttribute('value').split(': ')[1].replace('%', ''));
+    let qualValue = parseInt(document.getElementById('text-Qualidade').getAttribute('value').split(': ')[1].replace('%', ''));
 
-// // Função de interpolação linear (similar ao Mathf.Lerp no Unity)
-// function lerp(a, b, t) {
-//     return a + (b - a) * t;
-// }
+    // Gera novos valores aleatórios gradualmente
+    oeeValue = getRandomValue(oeeValue);
+    dispValue = getRandomValue(dispValue);
+    perfValue = getRandomValue(perfValue);
+    qualValue = getRandomValue(qualValue);
 
-// // Atualiza os valores a cada 3 segundos
-// setInterval(updateKPIValues, 3000);
+    // Atualiza os gauges
+    updateGauge(oeeValue, 'text-OEE', 'ring-OEE');
+    updateGauge(dispValue, 'text-Disponibilidade', 'ring-Disponibilidade');
+    updateGauge(perfValue, 'text-Performance', 'ring-Performance');
+    updateGauge(qualValue, 'text-Qualidade', 'ring-Qualidade');
+}
 
-// // Relaciona os elementos HTML com os KPIs
-// gaugeElements["OEE"] = document.querySelector('#gauge-OEE a-ring');
-// gaugeElements["Disponibilidade"] = document.querySelector('#gauge-Disponibilidade a-ring');
-// gaugeElements["Performance"] = document.querySelector('#gauge-Performance a-ring');
-// gaugeElements["Qualidade"] = document.querySelector('#gauge-Qualidade a-ring');
+// Função para exibir os gauges ao clicar no botão
+function showGauges() {
+    const gauges = document.querySelectorAll('a-entity');
+    gauges.forEach(gauge => gauge.setAttribute('visible', true));
+}
 
-// // Relaciona os textos com os KPIs
-// textElements["OEE"] = document.querySelector('#text-OEE');
-// textElements["Disponibilidade"] = document.querySelector('#text-Disponibilidade');
-// textElements["Performance"] = document.querySelector('#text-Performance');
-// textElements["Qualidade"] = document.querySelector('#text-Qualidade');
+// Configuração inicial quando a página carregar
+window.onload = function() {
+    // Inicializa os gauges com valores aleatórios
+    initializeGauges();
 
-// // Evento para detectar quando o QR code é lido
-// const qrMarker = document.getElementById('qrMarker');
-// qrMarker.addEventListener('markerFound', () => {
-//     console.log('QR Code detectado! Exibindo gauges...');
-//     updateKPIValues(); // Atualiza os KPIs quando o QR code é detectado
-// });
+    // Configura a atualização dos valores a cada 2 segundos
+    setInterval(randomUpdate, 2000);
 
-// qrMarker.addEventListener('markerLost', () => {
-//     console.log('QR Code perdido. Pausando exibição dos gauges.');
-// });
+    // Configura o evento do botão para mostrar os gauges
+    document.getElementById('showGaugesButton').addEventListener('click', showGauges);
+};
