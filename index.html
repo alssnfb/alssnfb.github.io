@@ -57,6 +57,53 @@
     </a-scene>
 
     <script>
+         AFRAME.registerComponent('draggable', {
+        schema: {
+          startPos: {type: 'vec3', default: {x: 0, y: 0, z: 0}},
+          isDragging: {type: 'boolean', default: false}
+        },
+
+        init: function () {
+          this.startPos = new THREE.Vector3();
+          this.el.addEventListener('mousedown', this.onMouseDown.bind(this));
+          this.el.addEventListener('mouseup', this.onMouseUp.bind(this));
+          this.el.addEventListener('mouseleave', this.onMouseUp.bind(this));
+          this.el.addEventListener('touchstart', this.onMouseDown.bind(this));
+          this.el.addEventListener('touchend', this.onMouseUp.bind(this));
+        },
+
+        onMouseDown: function (evt) {
+          this.data.isDragging = true;
+          this.startPos.copy(this.el.object3D.position);
+          this.el.sceneEl.addEventListener('mousemove', this.onMouseMove.bind(this));
+          this.el.sceneEl.addEventListener('touchmove', this.onMouseMove.bind(this));
+        },
+
+        onMouseUp: function (evt) {
+          this.data.isDragging = false;
+          this.el.sceneEl.removeEventListener('mousemove', this.onMouseMove.bind(this));
+          this.el.sceneEl.removeEventListener('touchmove', this.onMouseMove.bind(this));
+        },
+
+        onMouseMove: function (evt) {
+          if (this.data.isDragging) {
+            const mouse = new THREE.Vector2();
+            const rect = this.el.sceneEl.canvas.getBoundingClientRect();
+            mouse.x = ((evt.clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((evt.clientY - rect.top) / rect.height) * 2 + 1;
+
+            const raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(mouse, this.el.sceneEl.camera);
+            const intersection = raycaster.intersectObjects(this.el.sceneEl.object3D.children);
+
+            if (intersection.length > 0) {
+              const newPos = intersection[0].point;
+              this.el.object3D.position.set(newPos.x, newPos.y, newPos.z);
+            }
+          }
+        }
+      });
+
         function getRandomInitialValue() {
             return Math.floor(Math.random() * 101);
         }
