@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AR KPI Dashboard</title>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://rawcdn.githack.com/AR-js-org/AR.js/3.3.2/aframe/build/aframe-ar.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
@@ -20,45 +19,115 @@
         body, html {
             margin: 0;
             padding: 0;
-            overflow: hidden; 
+            overflow: hidden;
         }
     </style>
 </head>
 <body>
-    <a-scene background="color: #000000" vr-mode-ui="enabled: true" embedded arjs="sourceType: webcam; sourceWidth:1280; sourceHeight:960; displayWidth: 1280; displayHeight: 960; videoTexture: true; debugUIEnabled: true">
-        
-        <!-- Botão 3D "Status" -->
-        <a-entity id="status-button" geometry="primitive: box" material="color: blue" position="-1 1 -3" scale="0.5 0.5 0.5" text="value: Status; color: white" class="clickable"></a-entity>
-        
-        <!-- Botão 3D "Manutenção" -->
-        <a-entity id="manut-button" geometry="primitive: box" material="color: red" position="1 1 -3" scale="0.5 0.5 0.5" text="value: Manutenção; color: white" class="clickable"></a-entity>
+    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false" vr-mode-ui="enabled: false">
+        <!-- Botão 3D de Status -->
+        <a-entity id="status-button" position="0 1.5 -2" geometry="primitive: plane; width: 1; height: 0.5"
+                  material="color: blue" text="value: Status; color: white; align: center" class="clickable">
+        </a-entity>
 
-        <!-- Grupo de gauges manipuláveis, inicialmente invisível -->
-        <a-entity id="gauge-group" position="0 1 -2" visible="false" gesture-handler>
+        <!-- Botão 3D de Manutenção -->
+        <a-entity id="maintenance-button" position="0 0.5 -2" geometry="primitive: plane; width: 1; height: 0.5"
+                  material="color: red" text="value: Manutenção; color: white; align: center" class="clickable">
+        </a-entity>
+
+        <!-- Grupo de gauges manipuláveis -->
+        <a-entity id="gauge-group" scale="1 1 1" position="0 1 -2" visible="false" gesture-handler>
+            <!-- Gauge OEE -->
             <a-entity id="gauge-OEE" position="-1.5 0.5 0" scale="1.2 1.2 1.2">
                 <a-ring id="ring-OEE" color="blue" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
                 <a-text id="text-OEE" value="OEE: 0%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
 
+            <!-- Gauge Disponibilidade -->
             <a-entity id="gauge-Disponibilidade" position="-0.5 0.5 0" scale="1.2 1.2 1.2">
                 <a-ring id="ring-Disponibilidade" color="orange" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
                 <a-text id="text-Disponibilidade" value="Disp: 0%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
 
+            <!-- Gauge Performance -->
             <a-entity id="gauge-Performance" position="0.5 0.5 0" scale="1.2 1.2 1.2">
                 <a-ring id="ring-Performance" color="green" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
                 <a-text id="text-Performance" value="Perf: 0%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
 
+            <!-- Gauge Qualidade -->
             <a-entity id="gauge-Qualidade" position="1.5 0.5 0" scale="1.2 1.2 1.2">
                 <a-ring id="ring-Qualidade" color="yellow" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
                 <a-text id="text-Qualidade" value="Qual: 0%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
         </a-entity>
 
-        <a-entity camera></a-entity>
+        <a-camera></a-camera>
     </a-scene>
 
-    <script src="script.js"></script>
+    <script>
+        // Função para exibir os gauges como um modelo 3D na tela
+        function showGauges() {
+            const gaugeGroup = document.getElementById('gauge-group');
+            gaugeGroup.setAttribute('visible', true);
+        }
+
+        // Função para iniciar os eventos de clique nos botões 3D
+        function init3DButtons() {
+            const statusButton = document.getElementById('status-button');
+            statusButton.addEventListener('click', function () {
+                showGauges();
+            });
+
+            // Exemplo de comportamento para o botão de manutenção
+            const maintenanceButton = document.getElementById('maintenance-button');
+            maintenanceButton.addEventListener('click', function () {
+                alert('Manutenção ativada!');
+            });
+        }
+
+        // Função para manipular gestos nos gauges (pinça e rotação)
+        AFRAME.registerComponent('gesture-handler', {
+            schema: {enabled: {default: true}},
+            init: function () {
+                this.initialScale = this.el.object3D.scale.clone();
+                this.initialRotation = this.el.object3D.rotation.clone();
+            },
+            play: function () {
+                this.el.sceneEl.canvas.addEventListener('touchstart', this.onTouchStart.bind(this));
+                this.el.sceneEl.canvas.addEventListener('touchmove', this.onTouchMove.bind(this));
+            },
+            pause: function () {
+                this.el.sceneEl.canvas.removeEventListener('touchstart', this.onTouchStart.bind(this));
+                this.el.sceneEl.canvas.removeEventListener('touchmove', this.onTouchMove.bind(this));
+            },
+            onTouchStart: function (event) {
+                if (event.touches.length === 2) {
+                    this.initialDistance = this.getDistance(event.touches[0], event.touches[1]);
+                    this.initialScale.copy(this.el.object3D.scale);
+                } else if (event.touches.length === 1) {
+                    this.initialX = event.touches[0].pageX;
+                }
+            },
+            onTouchMove: function (event) {
+                if (event.touches.length === 2) {
+                    const currentDistance = this.getDistance(event.touches[0], event.touches[1]);
+                    const scaleFactor = currentDistance / this.initialDistance;
+                    this.el.object3D.scale.copy(this.initialScale).multiplyScalar(scaleFactor);
+                } else if (event.touches.length === 1) {
+                    const deltaX = event.touches[0].pageX - this.initialX;
+                    this.el.object3D.rotation.y = this.initialRotation.y + deltaX * 0.01;
+                }
+            },
+            getDistance: function (touch1, touch2) {
+                const dx = touch1.pageX - touch2.pageX;
+                const dy = touch1.pageY - touch2.pageY;
+                return Math.sqrt(dx * dx + dy * dy);
+            }
+        });
+
+        // Inicializar o comportamento dos botões
+        window.onload = init3DButtons;
+    </script>
 </body>
 </html>
