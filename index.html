@@ -22,33 +22,32 @@
     </style>
 </head>
 <body>
-    <a-scene embedded arjs="sourceType: webcam; sourceWidth:1280; sourceHeight:960; displayWidth: 1280; displayHeight: 960; videoTexture: true;">
-        <a-box id="status-button" position="-1 1 -2" depth="0.3" height="0.3" width="0.5" color="green" cursor-listener>
+    <a-scene embedded arjs="sourceType: webcam; videoTexture: true;">
+        <a-box id="status-button" position="0 1 -3" depth="0.3" height="0.3" width="0.5" color="green" cursor-listener>
             <a-text value="Status" align="center" position="0 0.5 0"></a-text>
         </a-box>
-        
-        <a-box id="manut-button" position="1 1 -2" depth="0.3" height="0.3" width="0.5" color="blue" cursor-listener>
+
+        <a-box id="manut-button" position="1 1 -3" depth="0.3" height="0.3" width="0.5" color="blue" cursor-listener>
             <a-text value="Manutencao" align="center" position="0 0.5 0"></a-text>
         </a-box>
-        
-        
+
         <a-entity id="gauges-group" visible="false">
-            <a-entity id="gauge-OEE" position="-1.5 0.5 -3" scale="1.2 1.2 1.2" draggable>
+            <a-entity id="gauge-OEE" position="-1.5 0.5 -3" scale="1.2 1.2 1.2">
                 <a-ring id="ring-OEE" color="blue" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
                 <a-text id="text-OEE" value="OEE: 0%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
 
-            <a-entity id="gauge-Disponibilidade" position="-0.5 0.5 -3" scale="1.2 1.2 1.2" draggable>
+            <a-entity id="gauge-Disponibilidade" position="-0.5 0.5 -3" scale="1.2 1.2 1.2">
                 <a-ring id="ring-Disponibilidade" color="orange" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
                 <a-text id="text-Disponibilidade" value="Disp: 0%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
 
-            <a-entity id="gauge-Performance" position="0.5 0.5 -3" scale="1.2 1.2 1.2" draggable>
+            <a-entity id="gauge-Performance" position="0.5 0.5 -3" scale="1.2 1.2 1.2">
                 <a-ring id="ring-Performance" color="green" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
                 <a-text id="text-Performance" value="Perf: 0%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
 
-            <a-entity id="gauge-Qualidade" position="1.5 0.5 -3" scale="1.2 1.2 1.2" draggable>
+            <a-entity id="gauge-Qualidade" position="1.5 0.5 -3" scale="1.2 1.2 1.2">
                 <a-ring id="ring-Qualidade" color="yellow" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
                 <a-text id="text-Qualidade" value="Qual: 0%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
@@ -59,53 +58,52 @@
 
     <script>
          AFRAME.registerComponent('draggable', {
-            schema: {
-              startPos: {type: 'vec3', default: {x: 0, y: 0, z: 0}},
-              isDragging: {type: 'boolean', default: false}
-            },
+        schema: {
+          startPos: {type: 'vec3', default: {x: 0, y: 0, z: 0}},
+          isDragging: {type: 'boolean', default: false}
+        },
 
-            init: function () {
-              this.startPos = new THREE.Vector3();
-              this.el.addEventListener('mousedown', this.onMouseDown.bind(this));
-              this.el.addEventListener('mouseup', this.onMouseUp.bind(this));
-              this.el.addEventListener('mouseleave', this.onMouseUp.bind(this));
-              this.el.addEventListener('touchstart', this.onMouseDown.bind(this));
-              this.el.addEventListener('touchend', this.onMouseUp.bind(this));
-            },
+        init: function () {
+          this.startPos = new THREE.Vector3();
+          this.el.addEventListener('mousedown', this.onMouseDown.bind(this));
+          this.el.addEventListener('mouseup', this.onMouseUp.bind(this));
+          this.el.addEventListener('mouseleave', this.onMouseUp.bind(this));
+          this.el.addEventListener('touchstart', this.onMouseDown.bind(this));
+          this.el.addEventListener('touchend', this.onMouseUp.bind(this));
+        },
 
-            onMouseDown: function (evt) {
-              this.data.isDragging = true;
-              this.startPos.copy(this.el.object3D.position);
-              this.el.sceneEl.addEventListener('mousemove', this.onMouseMove.bind(this));
-              this.el.sceneEl.addEventListener('touchmove', this.onMouseMove.bind(this));
-            },
+        onMouseDown: function (evt) {
+          this.data.isDragging = true;
+          this.startPos.copy(this.el.object3D.position);
+          this.el.sceneEl.addEventListener('mousemove', this.onMouseMove.bind(this));
+          this.el.sceneEl.addEventListener('touchmove', this.onMouseMove.bind(this));
+        },
 
-            onMouseUp: function (evt) {
-              this.data.isDragging = false;
-              this.el.sceneEl.removeEventListener('mousemove', this.onMouseMove.bind(this));
-              this.el.sceneEl.removeEventListener('touchmove', this.onMouseMove.bind(this));
-            },
+        onMouseUp: function (evt) {
+          this.data.isDragging = false;
+          this.el.sceneEl.removeEventListener('mousemove', this.onMouseMove.bind(this));
+          this.el.sceneEl.removeEventListener('touchmove', this.onMouseMove.bind(this));
+        },
 
-            onMouseMove: function (evt) {
-              if (this.data.isDragging) {
-                const mouse = new THREE.Vector2();
-                const rect = this.el.sceneEl.canvas.getBoundingClientRect();
-                mouse.x = ((evt.clientX - rect.left) / rect.width) * 2 - 1;
-                mouse.y = -((evt.clientY - rect.top) / rect.height) * 2 + 1;
+        onMouseMove: function (evt) {
+          if (this.data.isDragging) {
+            const mouse = new THREE.Vector2();
+            const rect = this.el.sceneEl.canvas.getBoundingClientRect();
+            mouse.x = ((evt.clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((evt.clientY - rect.top) / rect.height) * 2 + 1;
 
-                const raycaster = new THREE.Raycaster();
-                raycaster.setFromCamera(mouse, this.el.sceneEl.camera);
-                const intersection = raycaster.intersectObjects(this.el.sceneEl.object3D.children);
+            const raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(mouse, this.el.sceneEl.camera);
+            const intersection = raycaster.intersectObjects(this.el.sceneEl.object3D.children);
 
-                if (intersection.length > 0) {
-                  const newPos = intersection[0].point;
-                  this.el.object3D.position.set(newPos.x, newPos.y, newPos.z);
-                }
-              }
+            if (intersection.length > 0) {
+              const newPos = intersection[0].point;
+              this.el.object3D.position.set(newPos.x, newPos.y, newPos.z);
             }
-        });
+          }
+        }
+      });
 
-        // Funções para inicialização e atualização dos gauges
         function getRandomInitialValue() {
             return Math.floor(Math.random() * 101);
         }
@@ -124,33 +122,51 @@
             const ringEntity = document.getElementById(ringId);
             const greenValue = Math.floor((value / 100) * 255);
             const redValue = 255 - greenValue;
-            const color = `rgb(${redValue}, ${greenValue}, 0)`;
+            const color = rgb(${redValue}, ${greenValue}, 0);
             ringEntity.setAttribute('color', color);
 
             const thetaLength = (value / 100) * 360;
             ringEntity.setAttribute('theta-length', thetaLength);
         }
 
-        let oee = getRandomInitialValue();
-        let disponibilidade = getRandomInitialValue();
-        let performance = getRandomInitialValue();
-        let qualidade = getRandomInitialValue();
+        function initializeGauges() {
+            let oeeValue = getRandomInitialValue();
+            let dispValue = getRandomInitialValue();
+            let perfValue = getRandomInitialValue();
+            let qualValue = getRandomInitialValue();
 
-        function updateAllGauges() {
-            oee = getRandomValue(oee);
-            updateGauge(oee, 'text-OEE', 'ring-OEE');
-
-            disponibilidade = getRandomValue(disponibilidade);
-            updateGauge(disponibilidade, 'text-Disponibilidade', 'ring-Disponibilidade');
-
-            performance = getRandomValue(performance);
-            updateGauge(performance, 'text-Performance', 'ring-Performance');
-
-            qualidade = getRandomValue(qualidade);
-            updateGauge(qualidade, 'text-Qualidade', 'ring-Qualidade');
+            updateGauge(oeeValue, 'text-OEE', 'ring-OEE');
+            updateGauge(dispValue, 'text-Disponibilidade', 'ring-Disponibilidade');
+            updateGauge(perfValue, 'text-Performance', 'ring-Performance');
+            updateGauge(qualValue, 'text-Qualidade', 'ring-Qualidade');
         }
 
-        setInterval(updateAllGauges, 2000);
+        function randomUpdate() {
+            let oeeValue = parseInt(document.getElementById('text-OEE').getAttribute('value').split(': ')[1].replace('%', ''));
+            let dispValue = parseInt(document.getElementById('text-Disponibilidade').getAttribute('value').split(': ')[1].replace('%', ''));
+            let perfValue = parseInt(document.getElementById('text-Performance').getAttribute('value').split(': ')[1].replace('%', ''));
+            let qualValue = parseInt(document.getElementById('text-Qualidade').getAttribute('value').split(': ')[1].replace('%', ''));
+
+            oeeValue = getRandomValue(oeeValue);
+            dispValue = getRandomValue(dispValue);
+            perfValue = getRandomValue(perfValue);
+            qualValue = getRandomValue(qualValue);
+
+            updateGauge(oeeValue, 'text-OEE', 'ring-OEE');
+            updateGauge(dispValue, 'text-Disponibilidade', 'ring-Disponibilidade');
+            updateGauge(oeeValue, 'text-Performance', 'ring-Performance');
+            updateGauge(qualValue, 'text-Qualidade', 'ring-Qualidade');
+        }
+
+        document.getElementById('status-button').addEventListener('click', () => {
+            const gaugesGroup = document.getElementById('gauges-group');
+            gaugesGroup.setAttribute('visible', !gaugesGroup.getAttribute('visible'));
+        });
+
+        document.getElementById('manut-button').addEventListener('click', initializeGauges);
+
+        window.onload = initializeGauges;
+        setInterval(randomUpdate, 2000);
     </script>
 </body>
 </html>
