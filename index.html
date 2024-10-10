@@ -23,15 +23,16 @@
 </head>
 <body>
     <a-scene embedded arjs="sourceType: webcam; sourceWidth:1280; sourceHeight:960; displayWidth: 1280; displayHeight: 960; videoTexture: true;">
-        <a-box id="status-button" position="-1 1 -1" depth="0.3" height="0.3" width="0.5" color="green" cursor-listener>
-            <a-text value="Status" align="center" position="0 0.5 0"></a-text>
-        </a-box>
+        <a-entity camera look-controls>
+            <a-box id="status-button" position="0 1.5 -1" depth="0.3" height="0.3" width="0.5" color="green" cursor-listener>
+                <a-text value="Status" align="center" position="0 0.5 0"></a-text>
+            </a-box>
         
-        <a-box id="manut-button" position="1 1 -1" depth="0.3" height="0.3" width="0.5" color="blue" cursor-listener>
-            <a-text value="Manutencao" align="center" position="0 0.5 0"></a-text>
-        </a-box>
+            <a-box id="manut-button" position="2 1.5 -1" depth="0.3" height="0.3" width="0.5" color="blue" cursor-listener>
+                <a-text value="Manutencao" align="center" position="0 0.5 0"></a-text>
+            </a-box>
+        </a-entity>        
         
-
         <a-entity id="gauges-group" visible="false">
             <a-entity id="gauge-OEE" position="-1.5 0.5 -3" scale="1.2 1.2 1.2" draggable>
                 <a-ring id="ring-OEE" color="blue" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
