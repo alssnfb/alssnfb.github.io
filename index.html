@@ -122,7 +122,7 @@
             const ringEntity = document.getElementById(ringId);
             const greenValue = Math.floor((value / 100) * 255);
             const redValue = 255 - greenValue;
-            const color = rgb(${redValue}, ${greenValue}, 0);
+            const color = rgb($,{redValue}, $,{greenValue}, 0);
             ringEntity.setAttribute('color', color);
 
             const thetaLength = (value / 100) * 360;
