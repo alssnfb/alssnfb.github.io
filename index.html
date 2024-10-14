@@ -23,14 +23,21 @@
 </head>
 <body>
     <a-scene embedded>
+        <!-- Cursor -->
+        <a-entity cursor="fuse: true; fuseTimeout: 500"
+                  position="0 0 -1"
+                  geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+                  material="color: black; shader: flat">
+        </a-entity>
+
         <!-- Botão de Status -->
-        <a-box id="status-button" position="-0.5 0 -3" depth="0.3" height="0.3" width="0.5" color="green" class="clickable">
-            <a-text value="Status" align="center" position="0 0.3 0"></a-text>
+        <a-box id="status-button" position="-0.5 1 -3" depth="0.3" height="0.3" width="0.5" color="green" class="clickable">
+            <a-text value="Status" align="center" position="0 0.5 0"></a-text>
         </a-box>
         
         <!-- Botão de Manutenção -->
-        <a-box id="manut-button" position="0.5 0 -3" depth="0.3" height="0.3" width="0.5" color="blue" class="clickable">
-            <a-text value="Manutencao" align="center" position="0 0.3 0"></a-text>
+        <a-box id="manut-button" position="0.5 1 -3" depth="0.3" height="0.3" width="0.5" color="blue" class="clickable">
+            <a-text value="Manutencao" align="center" position="0 0.5 0"></a-text>
         </a-box>
 
         <!-- Grupo de gauges -->
@@ -56,10 +63,7 @@
             </a-entity>
         </a-entity>
 
-        <!-- Câmera com cursor para detectar cliques -->
-        <a-entity camera position="0 1.6 0">
-            <a-cursor></a-cursor>
-        </a-entity>
+        <a-entity camera></a-entity>
     </a-scene>
 
     <script>
@@ -125,18 +129,14 @@
         // Exibe ou oculta o grupo de gauges ao clicar no botão de status
         document.getElementById('status-button').addEventListener('click', () => {
             const gaugesGroup = document.getElementById('gauges-group');
-            const isVisible = gaugesGroup.getAttribute('visible') === "true";  // Verifica o estado atual
-            gaugesGroup.setAttribute('visible', !isVisible);  // Inverte o estado (exibe ou oculta)
+            gaugesGroup.setAttribute('visible', !gaugesGroup.getAttribute('visible'));
         });
 
-        // Inicializa os gauges ao clicar no botão de manutenção
-        document.getElementById('manut-button').addEventListener('click', initializeGauges);
+        // Inicializa os gauges quando a página carrega
+        initializeGauges();
 
-        // Inicializa os gauges ao carregar a página
-        window.onload = initializeGauges;
-
-        // Atualiza os valores dos gauges a cada 2 segundos
-        setInterval(randomUpdate, 2000);
+        // Atualiza os valores dos gauges a cada 5 segundos
+        setInterval(randomUpdate, 5000);
     </script>
 </body>
 </html>
