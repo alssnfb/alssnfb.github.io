@@ -92,19 +92,24 @@
 
         // Atualiza os gauges com novos valores
         function updateGauge(value, textId, ringId) {
-            console.log(`Updating ${textId} with value: ${value}`); // Adicione esta linha
-            const textEntity = document.getElementById(textId);
-            textEntity.setAttribute('value', textId.split('-')[1] + ': ' + value + '%');
+    const textEntity = document.getElementById(textId);
+    const ringEntity = document.getElementById(ringId);
 
-            const ringEntity = document.getElementById(ringId);
-            const greenValue = Math.floor((value / 100) * 255);
-            const redValue = 255 - greenValue;
-            const color = `rgb(${redValue}, ${greenValue}, 0)`;
-            ringEntity.setAttribute('color', color);
+    if (textEntity && ringEntity) {
+        textEntity.setAttribute('value', textId.split('-')[1] + ': ' + value + '%');
 
-            const thetaLength = (value / 100) * 360;
-            ringEntity.setAttribute('theta-length', thetaLength);
-        }
+        const greenValue = Math.floor((value / 100) * 255);
+        const redValue = 255 - greenValue;
+        const color = `rgb(${redValue}, ${greenValue}, 0)`;
+        ringEntity.setAttribute('color', color);
+
+        const thetaLength = (value / 100) * 360;
+        ringEntity.setAttribute('theta-length', thetaLength);
+    } else {
+        console.error("Element not found:", textId, ringId);
+    }
+}
+
 
         // Inicializa os gauges com valores aleatórios
         function initializeGauges() {
