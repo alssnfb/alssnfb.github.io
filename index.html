@@ -24,21 +24,17 @@
 <body>
     <a-scene embedded>
         <!-- Cursor -->
-        <a-entity cursor="fuse: true; fuseTimeout: 500"
-                  position="0 0 -1"
-                  geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
-                  material="color: black; shader: flat">
-        </a-entity>
+        <a-entity cursor="rayOrigin: mouse;" raycaster="objects: .clickable; far: 10; showLine: true"></a-entity>
 
         <!-- Botão de Status -->
         <a-box id="status-button" position="-0.5 0 -3" depth="0.3" height="0.3" width="0.5" color="green" class="clickable"
-               event-set__enter="scale: 1.2 1.2 1.2" event-set__leave="scale: 1 1 1">
+               event-set__enter="scale: 1.2 1.2 1.2" event-set__leave="scale: 1 1 1" status-cursor>
             <a-text value="Status" align="center" position="0 0.3 0"></a-text>
         </a-box>
         
         <!-- Botão de Manutenção -->
         <a-box id="manut-button" position="0.5 0 -3" depth="0.3" height="0.3" width="0.5" color="blue" class="clickable"
-               event-set__enter="scale: 1.2 1.2 1.2" event-set__leave="scale: 1 1 1">
+               event-set__enter="scale: 1.2 1.2 1.2" event-set__leave="scale: 1 1 1" status-cursor>
             <a-text value="Manutencao" align="center" position="0 0.3 0"></a-text>
         </a-box>
 
@@ -69,6 +65,19 @@
     </a-scene>
 
     <script>
+        // Componente para gerenciar o clique nos botões
+        AFRAME.registerComponent("status-cursor", {
+            init: function () {
+                const el = this.el;
+                const gaugesGroup = document.getElementById("gauges-group");
+
+                el.addEventListener("click", function () {
+                    const isVisible = gaugesGroup.getAttribute("visible");
+                    gaugesGroup.setAttribute("visible", !isVisible);
+                });
+            },
+        });
+
         // Função para inicializar valores aleatórios para os gauges
         function getRandomInitialValue() {
             return Math.floor(Math.random() * 101);
@@ -127,16 +136,6 @@
             updateGauge(perfValue, 'text-Performance', 'ring-Performance');
             updateGauge(qualValue, 'text-Qualidade', 'ring-Qualidade');
         }
-
-        // Função para exibir ou ocultar o grupo de gauges
-        function toggleGauges() {
-            const gaugesGroup = document.getElementById('gauges-group');
-            gaugesGroup.setAttribute('visible', !gaugesGroup.getAttribute('visible'));
-        }
-
-        // Adiciona event listeners para ambos os botões
-        document.getElementById('status-button').addEventListener('click', toggleGauges);
-        document.getElementById('manut-button').addEventListener('click', toggleGauges);
 
         // Inicializa os gauges quando a página carrega
         initializeGauges();
