@@ -31,12 +31,14 @@
         </a-entity>
 
         <!-- Botão de Status -->
-        <a-box id="status-button" position="1 0 -3" depth="0.3" height="0.3" width="0.5" color="green" class="clickable">
+        <a-box id="status-button" position="-0.5 0 -3" depth="0.3" height="0.3" width="0.5" color="green" class="clickable"
+               event-set__enter="scale: 1.2 1.2 1.2" event-set__leave="scale: 1 1 1">
             <a-text value="Status" align="center" position="0 0.3 0"></a-text>
         </a-box>
         
         <!-- Botão de Manutenção -->
-        <a-box id="manut-button" position="-1 0 -3" depth="0.3" height="0.3" width="0.5" color="blue" class="clickable">
+        <a-box id="manut-button" position="0.5 0 -3" depth="0.3" height="0.3" width="0.5" color="blue" class="clickable"
+               event-set__enter="scale: 1.2 1.2 1.2" event-set__leave="scale: 1 1 1">
             <a-text value="Manutencao" align="center" position="0 0.3 0"></a-text>
         </a-box>
 
@@ -126,17 +128,15 @@
             updateGauge(qualValue, 'text-Qualidade', 'ring-Qualidade');
         }
 
-        // Exibe ou oculta o grupo de gauges ao clicar no botão de status
-       // Função para exibir ou ocultar os gauges
-function toggleGauges() {
-    const gaugesGroup = document.getElementById('gauges-group');
-    gaugesGroup.setAttribute('visible', !gaugesGroup.getAttribute('visible'));
-}
+        // Função para exibir ou ocultar o grupo de gauges
+        function toggleGauges() {
+            const gaugesGroup = document.getElementById('gauges-group');
+            gaugesGroup.setAttribute('visible', !gaugesGroup.getAttribute('visible'));
+        }
 
-// Adiciona event listeners para ambos os botões
-document.getElementById('status-button').addEventListener('click', toggleGauges);
-document.getElementById('manut-button').addEventListener('click', toggleGauges);
-
+        // Adiciona event listeners para ambos os botões
+        document.getElementById('status-button').addEventListener('click', toggleGauges);
+        document.getElementById('manut-button').addEventListener('click', toggleGauges);
 
         // Inicializa os gauges quando a página carrega
         initializeGauges();
