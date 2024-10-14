@@ -30,7 +30,7 @@
         
         <!-- Botão de Manutenção -->
         <a-box id="manut-button" position="0.5 0 -3" depth="0.3" height="0.3" width="0.5" color="blue" class="clickable">
-            <a-text value="Manutenção" align="center" position="0 0.5 0"></a-text>
+            <a-text value="Manutencao" align="center" position="0 0.5 0"></a-text>
         </a-box>
 
         <!-- Grupo de gauges -->
@@ -122,7 +122,8 @@
         // Exibe ou oculta o grupo de gauges ao clicar no botão de status
         document.getElementById('status-button').addEventListener('click', () => {
             const gaugesGroup = document.getElementById('gauges-group');
-            gaugesGroup.setAttribute('visible', !gaugesGroup.getAttribute('visible'));
+            const isVisible = gaugesGroup.getAttribute('visible') === "true";  // Verifica o estado atual
+            gaugesGroup.setAttribute('visible', !isVisible);  // Inverte o estado (exibe ou oculta)
         });
 
         // Inicializa os gauges ao clicar no botão de manutenção
