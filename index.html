@@ -27,16 +27,14 @@
         <a-entity cursor="rayOrigin: mouse;" raycaster="objects: .clickable; far: 10; showLine: true"></a-entity>
 
         <!-- Botão de Status -->
-        <a-box id="status-button" position="-0.5 0 -3" depth="0.3" height="0.3" width="0.5" color="green" class="clickable"
-               event-set__enter="scale: 1.2 1.2 1.2" event-set__leave="scale: 1 1 1" status-cursor>
+        <a-entity id="status-button" position="-0.5 0 -3" geometry="primitive: box; depth: 0.3; height: 0.3; width: 0.5" material="color: green" class="clickable" status-cursor>
             <a-text value="Status" align="center" position="0 0.3 0"></a-text>
-        </a-box>
+        </a-entity>
         
         <!-- Botão de Manutenção -->
-        <a-box id="manut-button" position="0.5 0 -3" depth="0.3" height="0.3" width="0.5" color="blue" class="clickable"
-               event-set__enter="scale: 1.2 1.2 1.2" event-set__leave="scale: 1 1 1" status-cursor>
+        <a-entity id="manut-button" position="0.5 0 -3" geometry="primitive: box; depth: 0.3; height: 0.3; width: 0.5" material="color: blue" class="clickable" status-cursor>
             <a-text value="Manutencao" align="center" position="0 0.3 0"></a-text>
-        </a-box>
+        </a-entity>
 
         <!-- Grupo de gauges -->
         <a-entity id="gauges-group" visible="false">
@@ -72,8 +70,9 @@
                 const gaugesGroup = document.getElementById("gauges-group");
 
                 el.addEventListener("click", function () {
-                    const isVisible = gaugesGroup.getAttribute("visible");
+                    const isVisible = gaugesGroup.getAttribute("visible") === "true"; // Verifica se está visível
                     gaugesGroup.setAttribute("visible", !isVisible);
+                    console.log("Gauges visibility:", !isVisible); // Adicione esta linha
                 });
             },
         });
@@ -93,6 +92,7 @@
 
         // Atualiza os gauges com novos valores
         function updateGauge(value, textId, ringId) {
+            console.log(`Updating ${textId} with value: ${value}`); // Adicione esta linha
             const textEntity = document.getElementById(textId);
             textEntity.setAttribute('value', textId.split('-')[1] + ': ' + value + '%');
 
