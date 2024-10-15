@@ -29,7 +29,7 @@
                 const el = this.el;
                 const gaugesGroup = document.getElementById("gauges-group");
 
-                el.addEventListener("click", function () {
+                el.addEventListener("click",console.log("click disparado"), function () {
                     const isVisible = gaugesGroup.getAttribute("visible") === "true";
                     gaugesGroup.setAttribute("visible", !isVisible);
                     console.log("Gauges visibility:", !isVisible);
