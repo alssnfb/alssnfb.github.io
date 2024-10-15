@@ -69,20 +69,18 @@
         // Inicializa os gauges quando a página carrega
         document.addEventListener('DOMContentLoaded', () => {
             initializeGauges();
-            setTimeout(() => {
-                document.getElementById("gauges-group").setAttribute("visible", "false"); // Esconde os gauges no início
-            }, 500);
+            document.getElementById("gauges-group").setAttribute("visible", "false"); // Esconde os gauges no início
         });
     </script>
 
-    <a-scene embedded arjs='sourceType:webcam; sourceWidth:1280; sourceHeight:960; displayWidth: 1280; displayHeight: 960; videoTexture: true;'>
+    <a-scene embedded arjs='sourceType:webcam; sourceWidth:1280; sourceHeight:960; displayWidth:1280; displayHeight:960; videoTexture:true;'>
         <!-- Botão de Status -->
         <a-entity id="status-button" position="-0.5 0 -3" geometry="primitive: box; depth: 0.3; height: 0.3; width: 0.5" material="color: green" class="clickable" status-cursor>
             <a-text value="Status" align="center" position="0 0.3 0"></a-text>
         </a-entity>
 
         <!-- Botão de Manutenção -->
-        <a-entity id="manut-button" position="0.5 0 -3" geometry="primitive: box; depth: 0.3; height: 0.3; width: 0.5" material="color: blue" class="clickable" status-cursor>
+        <a-entity id="manut-button" position="0.5 0 -3" geometry="primitive: box; depth: 0.3; height: 0.3; width: 0.5" material="color: blue" class="clickable">
             <a-text value="Manutencao" align="center" position="0 0.3 0"></a-text>
         </a-entity>
 
