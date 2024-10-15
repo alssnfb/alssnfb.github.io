@@ -32,7 +32,7 @@
                 el.addEventListener("click", function () {
                     const isVisible = gaugesGroup.getAttribute("visible") === "true"; // Verifica se está visível
                     gaugesGroup.setAttribute("visible", !isVisible);
-                    console.log("Gauges visibility:", !isVisible); // Adicione esta linha
+                    console.log("Gauges visibility:", !isVisible); // Adicione esta linha para verificar visibilidade
                 });
             },
         });
@@ -101,12 +101,12 @@
             updateGauge(qualValue, 'text-Qualidade', 'ring-Qualidade');
         }
 
-        // Inicializa os gauges quando a página carrega e depois os esconde
+        // Inicializa os gauges quando a página carrega e deixa os botões visíveis
         document.addEventListener('DOMContentLoaded', () => {
             initializeGauges();
             setTimeout(() => {
-                document.getElementById("gauges-group").setAttribute("visible", "false");
-            }, 500); // Esconde depois de 0.5 segundos
+                document.getElementById("gauges-group").setAttribute("visible", "false"); // Esconde os gauges no início
+            }, 500);
         });
 
         // Atualiza os valores dos gauges a cada 5 segundos
@@ -128,7 +128,7 @@
         </a-entity>
 
         <!-- Grupo de gauges -->
-        <a-entity id="gauges-group" visible="true">
+        <a-entity id="gauges-group" visible="false"> <!-- Inicialmente invisível -->
             <a-entity id="gauge-OEE" position="-1.5 0.5 -3" scale="1.2 1.2 1.2">
                 <a-ring id="ring-OEE" color="blue" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
                 <a-text id="text-OEE" value="OEE: 0%" position="0 0.8 0" align="center" color="white"></a-text>
@@ -149,6 +149,9 @@
                 <a-text id="text-Qualidade" value="Qual: 0%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
         </a-entity>
+
+        <!-- AR -->
+        <a-marker-camera preset="hiro"></a-marker-camera>
     </a-scene>
 </body>
 </html>
