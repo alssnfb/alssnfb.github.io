@@ -23,20 +23,6 @@
 </head>
 <body>
     <script>
-        // Componente para gerenciar o clique nos botões
-        AFRAME.registerComponent("status-cursor", {
-            init: function () {
-                const el = this.el;
-                const gaugesGroup = document.getElementById("gauges-group");
-
-                el.addEventListener("click",console.log("click disparado"), function () {
-                    const isVisible = gaugesGroup.getAttribute("visible") === "true";
-                    gaugesGroup.setAttribute("visible", !isVisible);
-                    console.log("Gauges visibility:", !isVisible);
-                });
-            },
-        });
-
         // Inicializa os gauges com valor fixo de 100%
         function initializeGauges() {
             const value = 100; // Valor fixo de 100%
@@ -70,17 +56,27 @@
         document.addEventListener('DOMContentLoaded', () => {
             initializeGauges();
             document.getElementById("gauges-group").setAttribute("visible", "false"); // Esconde os gauges no início
+
+            // Adiciona o evento de clique para o botão de Status
+            const statusButton = document.getElementById("status-button");
+            const gaugesGroup = document.getElementById("gauges-group");
+            
+            statusButton.addEventListener("click", function () {
+                const isVisible = gaugesGroup.getAttribute("visible") === "true";
+                gaugesGroup.setAttribute("visible", !isVisible);
+                console.log("Gauges visibility:", !isVisible);
+            });
         });
     </script>
 
     <a-scene embedded arjs='sourceType:webcam; sourceWidth:1280; sourceHeight:960; displayWidth:1280; displayHeight:960; videoTexture:true;'>
         <!-- Botão de Status -->
-        <a-entity id="status-button" position="-0.5 0 -3" geometry="primitive: box; depth: 0.3; height: 0.3; width: 0.5" material="color: green" class="clickable" status-cursor>
+        <a-entity id="status-button" position="-0.5 0 -3" geometry="primitive: box; depth: 0.3; height: 0.3; width: 0.5" material="color: green">
             <a-text value="Status" align="center" position="0 0.3 0"></a-text>
         </a-entity>
 
         <!-- Botão de Manutenção -->
-        <a-entity id="manut-button" position="0.5 0 -3" geometry="primitive: box; depth: 0.3; height: 0.3; width: 0.5" material="color: blue" class="clickable">
+        <a-entity id="manut-button" position="0.5 0 -3" geometry="primitive: box; depth: 0.3; height: 0.3; width: 0.5" material="color: blue">
             <a-text value="Manutencao" align="center" position="0 0.3 0"></a-text>
         </a-entity>
 
