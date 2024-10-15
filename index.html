@@ -62,6 +62,7 @@
             const gaugesGroup = document.getElementById("gauges-group");
             
             statusButton.addEventListener("click", function () {
+                console.log("Botão clicado!");
                 const isVisible = gaugesGroup.getAttribute("visible") === "true";
                 gaugesGroup.setAttribute("visible", !isVisible);
                 console.log("Gauges visibility:", !isVisible);
@@ -71,12 +72,12 @@
 
     <a-scene embedded arjs='sourceType:webcam; sourceWidth:1280; sourceHeight:960; displayWidth:1280; displayHeight:960; videoTexture:true;'>
         <!-- Botão de Status -->
-        <a-entity id="status-button" position="-0.5 0 -3" geometry="primitive: box; depth: 0.3; height: 0.3; width: 0.5" material="color: green">
+        <a-entity id="status-button" class="clickable" position="-0.5 0 -3" geometry="primitive: box; depth: 0.3; height: 0.3; width: 0.5" material="color: green">
             <a-text value="Status" align="center" position="0 0.3 0"></a-text>
         </a-entity>
 
         <!-- Botão de Manutenção -->
-        <a-entity id="manut-button" position="0.5 0 -3" geometry="primitive: box; depth: 0.3; height: 0.3; width: 0.5" material="color: red">
+        <a-entity id="manut-button" class="clickable" position="0.5 0 -3" geometry="primitive: box; depth: 0.3; height: 0.3; width: 0.5" material="color: red">
             <a-text value="Manutencao" align="center" position="0 0.3 0"></a-text>
         </a-entity>
 
@@ -104,7 +105,11 @@
         </a-entity>
 
         <!-- AR -->
-        <a-entity camera look-controls></a-entity>
+        <a-entity camera look-controls>
+            <a-entity cursor="fuse: false" raycaster="objects: .clickable"
+            position="0 0 -1" geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+            material="color: black; shader: flat"></a-entity>
+        </a-entity>
     </a-scene>
 </body>
 </html>
