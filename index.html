@@ -30,9 +30,9 @@
                 const gaugesGroup = document.getElementById("gauges-group");
 
                 el.addEventListener("click", function () {
-                    const isVisible = gaugesGroup.getAttribute("visible") === "true"; // Verifica se está visível
+                    const isVisible = gaugesGroup.getAttribute("visible") === "true";
                     gaugesGroup.setAttribute("visible", !isVisible);
-                    console.log("Gauges visibility:", !isVisible); // Adicione esta linha para verificar visibilidade
+                    console.log("Gauges visibility:", !isVisible);
                 });
             },
         });
@@ -46,7 +46,7 @@
             updateGauge(value, 'text-Qualidade', 'ring-Qualidade');
         }
 
-        // Atualiza os gauges com valores fixos
+        // Atualiza os gauges
         function updateGauge(value, textId, ringId) {
             const textEntity = document.getElementById(textId);
             const ringEntity = document.getElementById(ringId);
@@ -75,10 +75,7 @@
         });
     </script>
 
-    <a-scene embedded arjs>
-        <!-- Cursor -->
-        <a-entity cursor="rayOrigin: mouse;" raycaster="objects: .clickable; far: 10; showLine: true"></a-entity>
-
+    <a-scene embedded arjs='sourceType:webcam; sourceWidth:1280; sourceHeight:960; displayWidth: 1280; displayHeight: 960; videoTexture: true;'>
         <!-- Botão de Status -->
         <a-entity id="status-button" position="-0.5 0 -3" geometry="primitive: box; depth: 0.3; height: 0.3; width: 0.5" material="color: green" class="clickable" status-cursor>
             <a-text value="Status" align="center" position="0 0.3 0"></a-text>
