@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AR KPI Dashboard</title>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/master/aframe/build/aframe-ar.js"></script>
     <style>
         a-scene {
             width: 100vw;
@@ -36,7 +37,16 @@
             },
         });
 
-        // Função para atualizar os gauges com um valor fixo de 100%
+        // Inicializa os gauges com valor fixo de 100%
+        function initializeGauges() {
+            const value = 100; // Valor fixo de 100%
+            updateGauge(value, 'text-OEE', 'ring-OEE');
+            updateGauge(value, 'text-Disponibilidade', 'ring-Disponibilidade');
+            updateGauge(value, 'text-Performance', 'ring-Performance');
+            updateGauge(value, 'text-Qualidade', 'ring-Qualidade');
+        }
+
+        // Atualiza os gauges com valores fixos
         function updateGauge(value, textId, ringId) {
             const textEntity = document.getElementById(textId);
             const ringEntity = document.getElementById(ringId);
@@ -56,15 +66,6 @@
             }
         }
 
-        // Inicializa os gauges com valor fixo de 100%
-        function initializeGauges() {
-            let value = 100; // Valor fixo de 100%
-            updateGauge(value, 'text-OEE', 'ring-OEE');
-            updateGauge(value, 'text-Disponibilidade', 'ring-Disponibilidade');
-            updateGauge(value, 'text-Performance', 'ring-Performance');
-            updateGauge(value, 'text-Qualidade', 'ring-Qualidade');
-        }
-
         // Inicializa os gauges quando a página carrega
         document.addEventListener('DOMContentLoaded', () => {
             initializeGauges();
@@ -74,7 +75,7 @@
         });
     </script>
 
-    <a-scene embedded>
+    <a-scene embedded arjs>
         <!-- Cursor -->
         <a-entity cursor="rayOrigin: mouse;" raycaster="objects: .clickable; far: 10; showLine: true"></a-entity>
 
