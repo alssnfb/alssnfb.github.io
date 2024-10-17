@@ -34,9 +34,6 @@ a-entity {
 
 **HTML**
 
-<a-entity id="gauge-OEE" position="-1.5 0 0" scale="1.2 1.2 1.2" material="color: blue;">
-<a-plane position="0 0 0" rotation="-90 0 0" width="1" height="1" color="blue"></a-plane>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -45,118 +42,6 @@ a-entity {
     <title>AR KPI Dashboard</title>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/master/aframe/build/aframe-ar.js"></script>
-    <script>
-         AFRAME.registerComponent('draggable', {
-        schema: {
-          startPos: {type: 'vec3', default: {x: 0, y: 0, z: 0}},
-          isDragging: {type: 'boolean', default: false}
-        },
-
-        init: function () {
-          this.startPos = new THREE.Vector3();
-          this.el.addEventListener('mousedown', this.onMouseDown.bind(this));
-          this.el.addEventListener('mouseup', this.onMouseUp.bind(this));
-          this.el.addEventListener('mouseleave', this.onMouseUp.bind(this));
-          this.el.addEventListener('touchstart', this.onMouseDown.bind(this));
-          this.el.addEventListener('touchend', this.onMouseUp.bind(this));
-        },
-
-        onMouseDown: function (evt) {
-          this.data.isDragging = true;
-          this.startPos.copy(this.el.object3D.position);
-          this.el.sceneEl.addEventListener('mousemove', this.onMouseMove.bind(this));
-          this.el.sceneEl.addEventListener('touchmove', this.onMouseMove.bind(this));
-        },
-
-        onMouseUp: function (evt) {
-          this.data.isDragging = false;
-          this.el.sceneEl.removeEventListener('mousemove', this.onMouseMove.bind(this));
-          this.el.sceneEl.removeEventListener('touchmove', this.onMouseMove.bind(this));
-        },
-
-        onMouseMove: function (evt) {
-          if (this.data.isDragging) {
-            const mouse = new THREE.Vector2();
-            const rect = this.el.sceneEl.canvas.getBoundingClientRect();
-            mouse.x = ((evt.clientX - rect.left) / rect.width) * 2 - 1;
-            mouse.y = -((evt.clientY - rect.top) / rect.height) * 2 + 1;
-
-            const raycaster = new THREE.Raycaster();
-            raycaster.setFromCamera(mouse, this.el.sceneEl.camera);
-            const intersection = raycaster.intersectObjects(this.el.sceneEl.object3D.children);
-
-            if (intersection.length > 0) {
-              const newPos = intersection[0].point;
-              this.el.object3D.position.set(newPos.x, newPos.y, newPos.z);
-            }
-          }
-        }
-      });
-
-        function getRandomInitialValue() {
-            return Math.floor(Math.random() * 101);
-        }
-
-        function getRandomValue(currentValue) {
-            const randomChange = Math.floor(Math.random() * 11) - 5;
-            let newValue = currentValue + randomChange;
-            newValue = Math.max(0, Math.min(newValue, 100));
-            return newValue;
-        }
-
-        function updateGauge(value, textId, ringId) {
-            const textEntity = document.getElementById(textId);
-            textEntity.setAttribute('value', textId.split('-')[1] + ': ' + value + '%');
-
-            const ringEntity = document.getElementById(ringId);
-            const greenValue = Math.floor((value / 100) * 255);
-            const redValue = 255 - greenValue;
-            const color = rgb($,{redValue}, $,{greenValue}, 0);
-            ringEntity.setAttribute('color', color);
-
-            const thetaLength = (value / 100) * 360;
-            ringEntity.setAttribute('theta-length', thetaLength);
-        }
-
-        function initializeGauges() {
-            let oeeValue = getRandomInitialValue();
-            let dispValue = getRandomInitialValue();
-            let perfValue = getRandomInitialValue();
-            let qualValue = getRandomInitialValue();
-
-            updateGauge(oeeValue, 'text-OEE', 'ring-OEE');
-            updateGauge(dispValue, 'text-Disponibilidade', 'ring-Disponibilidade');
-            updateGauge(perfValue, 'text-Performance', 'ring-Performance');
-            updateGauge(qualValue, 'text-Qualidade', 'ring-Qualidade');
-        }
-
-        function randomUpdate() {
-            let oeeValue = parseInt(document.getElementById('text-OEE').getAttribute('value').split(': ')[1].replace('%', ''));
-            let dispValue = parseInt(document.getElementById('text-Disponibilidade').getAttribute('value').split(': ')[1].replace('%', ''));
-            let perfValue = parseInt(document.getElementById('text-Performance').getAttribute('value').split(': ')[1].replace('%', ''));
-            let qualValue = parseInt(document.getElementById('text-Qualidade').getAttribute('value').split(': ')[1].replace('%', ''));
-
-            oeeValue = getRandomValue(oeeValue);
-            dispValue = getRandomValue(dispValue);
-            perfValue = getRandomValue(perfValue);
-            qualValue = getRandomValue(qualValue);
-
-            updateGauge(oeeValue, 'text-OEE', 'ring-OEE');
-            updateGauge(dispValue, 'text-Disponibilidade', 'ring-Disponibilidade');
-            updateGauge(oeeValue, 'text-Performance', 'ring-Performance');
-            updateGauge(qualValue, 'text-Qualidade', 'ring-Qualidade');
-        }
-
-        document.getElementById('status-button').addEventListener('click', () => {
-            const gaugesGroup = document.getElementById('gauges-group');
-            gaugesGroup.setAttribute('visible', !gaugesGroup.getAttribute('visible'));
-        });
-
-        document.getElementById('manut-button').addEventListener('click', initializeGauges);
-
-        window.onload = initializeGauges;
-        setInterval(randomUpdate, 2000);
-    </script>
     <style>
         a-scene {
             width: 100vw;
@@ -173,39 +58,118 @@ a-entity {
     </style>
 </head>
 <body>
-    <a-scene embedded arjs="sourceType: webcam; videoTexture: true;">
-        <a-box id="status-button" position="0 1 -3" depth="0.3" height="0.3" width="0.5" color="green" cursor-listener-draggable>
-            <a-text value="Status" align="center" position="0 0.5 0"></a-text>
-        </a-box>
+    <script>
+        // Função para gerar um valor aleatório entre dois números
+        function getRandomValue(min, max) {
+            return Math.random() * (max - min) + min;
+        }
 
-        <a-box id="manut-button" position="1 1 -3" depth="0.3" height="0.3" width="0.5" color="blue" cursor-listener-draggable>
-            <a-text value="Manutencao" align="center" position="0 0.5 0"></a-text>
-        </a-box>
+        // Atualiza os gauges gradualmente
+        function simulateGaugeChange(textId, ringId, currentValue) {
+            const newValue = getRandomValue(0, 100); // Gera um novo valor aleatório
+            let step = (newValue - currentValue) / 100; // Define o passo de mudança gradual
 
-        <a-entity id="gauges-group" visible="false">
-            <a-entity id="gauge-OEE" position="-1.5 0.5 -3" scale="1.2 1.2 1.2">
+            const interval = setInterval(() => {
+                if (Math.abs(newValue - currentValue) < Math.abs(step)) {
+                    currentValue = newValue; // Finaliza o valor
+                    clearInterval(interval);
+                } else {
+                    currentValue += step; // Atualiza gradualmente
+                }
+                updateGauge(currentValue, textId, ringId);
+            }, 50); // Atualiza a cada 50ms para uma transição suave
+        }
+
+        // Inicializa os gauges
+        function initializeGauges() {
+            let OEEValue = 100, DispValue = 100, PerfValue = 100, QualValue = 100;
+
+            setInterval(() => {
+                simulateGaugeChange('text-OEE', 'ring-OEE', OEEValue);
+                simulateGaugeChange('text-Disponibilidade', 'ring-Disponibilidade', DispValue);
+                simulateGaugeChange('text-Performance', 'ring-Performance', PerfValue);
+                simulateGaugeChange('text-Qualidade', 'ring-Qualidade', QualValue);
+            }, 5000); // A cada 5 segundos, simula uma nova atualização de todos os gauges
+        }
+
+        // Atualiza os gauges
+        function updateGauge(value, textId, ringId) {
+            const textEntity = document.getElementById(textId);
+            const ringEntity = document.getElementById(ringId);
+
+            if (textEntity && ringEntity) {
+                textEntity.setAttribute('value', textId.split('-')[1] + ': ' + Math.round(value) + '%');
+
+                const greenValue = Math.floor((value / 100) * 255);
+                const redValue = 255 - greenValue;
+                const color = `rgb(${redValue}, ${greenValue}, 0)`;
+                ringEntity.setAttribute('color', color);
+
+                const thetaLength = (value / 100) * 360;
+                ringEntity.setAttribute('theta-length', thetaLength);
+            } else {
+                console.error("Element not found:", textId, ringId);
+            }
+        }
+
+        // Inicializa os gauges quando a página carrega
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeGauges();
+            document.getElementById("gauges-group").setAttribute("visible", "false"); // Esconde os gauges no início
+
+            // Adiciona o evento de clique para o botão de Status
+            const statusButton = document.getElementById("status-button");
+            const gaugesGroup = document.getElementById("gauges-group");
+            
+            statusButton.addEventListener("click", function () {
+                console.log("Botão clicado!");
+                const isVisible = gaugesGroup.getAttribute("visible") === "true";
+                gaugesGroup.setAttribute("visible", !isVisible);
+                console.log("Gauges visibility:", !isVisible);
+            });
+        });
+    </script>
+
+    <a-scene embedded arjs='sourceType:webcam; sourceWidth:1280; sourceHeight:960; displayWidth:1280; displayHeight:960; videoTexture:true;'>
+        <!-- Botão de Status -->
+        <a-entity id="status-button" class="clickable" position="-0.5 0 -3" geometry="primitive: box; depth: 0.3; height: 0.3; width: 0.5" material="color: green">
+            <a-text value="Status" align="center" position="0 0.3 0"></a-text>
+        </a-entity>
+
+        <!-- Botão de Manutenção -->
+        <a-entity id="manut-button" class="clickable" position="0.5 0 -3" geometry="primitive: box; depth: 0.3; height: 0.3; width: 0.5" material="color: red">
+            <a-text value="Manutencao" align="center" position="0 0.3 0"></a-text>
+        </a-entity>
+
+        <!-- Grupo de gauges -->
+        <a-entity id="gauges-group" visible="false"> <!-- Inicialmente invisível -->
+            <a-entity id="gauge-OEE" position="-1.5 0.5 -3" scale="0.5 0.5 0.5">
                 <a-ring id="ring-OEE" color="blue" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
-                <a-text id="text-OEE" value="OEE: 0%" position="0 0.8 0" align="center" color="white"></a-text>
+                <a-text id="text-OEE" value="OEE: 100%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
 
-            <a-entity id="gauge-Disponibilidade" position="-0.5 0.5 -3" scale="1.2 1.2 1.2">
+            <a-entity id="gauge-Disponibilidade" position="-0.5 0.5 -3" scale="0.5 0.5 0.5">
                 <a-ring id="ring-Disponibilidade" color="orange" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
-                <a-text id="text-Disponibilidade" value="Disp: 0%" position="0 0.8 0" align="center" color="white"></a-text>
+                <a-text id="text-Disponibilidade" value="Disp: 100%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
 
-            <a-entity id="gauge-Performance" position="0.5 0.5 -3" scale="1.2 1.2 1.2">
+            <a-entity id="gauge-Performance" position="0.5 0.5 -3" scale="0.5 0.5 0.5">
                 <a-ring id="ring-Performance" color="green" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
-                <a-text id="text-Performance" value="Perf: 0%" position="0 0.8 0" align="center" color="white"></a-text>
+                <a-text id="text-Performance" value="Perf: 100%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
 
-            <a-entity id="gauge-Qualidade" position="1.5 0.5 -3" scale="1.2 1.2 1.2">
+            <a-entity id="gauge-Qualidade" position="1.5 0.5 -3" scale="0.5 0.5 0.5">
                 <a-ring id="ring-Qualidade" color="yellow" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
-                <a-text id="text-Qualidade" value="Qual: 0%" position="0 0.8 0" align="center" color="white"></a-text>
+                <a-text id="text-Qualidade" value="Qual: 100%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
         </a-entity>
 
-        <a-entity camera></a-entity>
+        <!-- AR -->
+        <a-entity camera look-controls>
+            <a-entity cursor="fuse: false" raycaster="objects: .clickable"
+            position="0 0 -1" geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+            material="color: black; shader: flat"></a-entity>
+        </a-entity>
     </a-scene>
-
 </body>
 </html>

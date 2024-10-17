@@ -76,9 +76,40 @@
             }
         }
 
-        // Inicializa os gauges quando a página carrega
+        // Funções que atualizam a barra de preenchimento para manter a escala correta
+            function updateProductionBar(value) {
+        const barFill = document.getElementById("production-bar-fill");
+
+        if (barFill) {
+            // Atualiza a escala da barra de preenchimento
+            barFill.setAttribute("scale", `${value / 100} 0.2 0.1`);
+            // Mantém a posição da barra de preenchimento à esquerda
+            barFill.setAttribute("position", `${(value / 200) - 0.5} 0 0`);
+            // Mantém a cor da barra de preenchimento como verde escuro
+            barFill.setAttribute("color", "darkgreen");
+        }
+    }
+
+        // Função de simular porcentagem similar a dos gauges
+        function simulateProductionBarChange() {
+            let productionValue = 0;
+            let step = 1; // Incremento para o preenchimento
+
+            const interval = setInterval(() => {
+                if (productionValue >= 100) {
+                    productionValue = 0; // Reinicia a barra após chegar a 100%
+                } else {
+                    productionValue += step; // Atualiza gradualmente
+                }
+                updateProductionBar(productionValue);
+            }, 100); // Atualiza a cada 100ms
+        }
+
+        // Inicializa os elementos quando a página carrega
         document.addEventListener('DOMContentLoaded', () => {
             initializeGauges();
+            simulateProductionBarChange();
+
             document.getElementById("gauges-group").setAttribute("visible", "false"); // Esconde os gauges no início
 
             // Adiciona o evento de clique para o botão de Status
@@ -86,10 +117,8 @@
             const gaugesGroup = document.getElementById("gauges-group");
             
             statusButton.addEventListener("click", function () {
-                console.log("Botão clicado!");
                 const isVisible = gaugesGroup.getAttribute("visible") === "true";
                 gaugesGroup.setAttribute("visible", !isVisible);
-                console.log("Gauges visibility:", !isVisible);
             });
         });
     </script>
@@ -97,12 +126,12 @@
     <a-scene embedded arjs='sourceType:webcam; sourceWidth:1280; sourceHeight:960; displayWidth:1280; displayHeight:960; videoTexture:true;'>
         <!-- Botão de Status -->
         <a-entity id="status-button" class="clickable" position="-0.5 0 -3" geometry="primitive: box; depth: 0.3; height: 0.3; width: 0.5" material="color: green">
-            <a-text value="Status" align="center" position="0 0.3 0"></a-text>
+            <a-text value="Status" align="center" position="0 0.3 0" scale="0.7 0.7 0.7"></a-text>
         </a-entity>
 
         <!-- Botão de Manutenção -->
         <a-entity id="manut-button" class="clickable" position="0.5 0 -3" geometry="primitive: box; depth: 0.3; height: 0.3; width: 0.5" material="color: red">
-            <a-text value="Manutencao" align="center" position="0 0.3 0"></a-text>
+            <a-text value="Manutencao" align="center" position="0 0.3 0" scale="0.7 0.7 0.7"></a-text>
         </a-entity>
 
         <!-- Grupo de gauges -->
@@ -126,6 +155,13 @@
                 <a-ring id="ring-Qualidade" color="yellow" radius-inner="0.5" radius-outer="0.6" theta-start="0" theta-length="0"></a-ring>
                 <a-text id="text-Qualidade" value="Qual: 100%" position="0 0.8 0" align="center" color="white"></a-text>
             </a-entity>
+        </a-entity>
+
+            <!-- Barra de Produção -->
+        <a-entity position="0 -0.8 -3">
+            <a-box position="0 0 0" scale="1 0.2 0.1" color="lightgreen" id="production-bar-background" opacity="0.5"></a-box>
+            <a-box position="-0.5 0 0" scale="0 0.2 0.1" color="darkgreen" id="production-bar-fill"></a-box>
+            <a-text value="Producao" align="center" position="0 -0.3 -3" scale="1.5 1.5 1.5"></a-text>
         </a-entity>
 
         <!-- AR -->
